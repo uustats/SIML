@@ -489,7 +489,7 @@ In the following sections we will investigate the connection between the in-samp
 
 ## Hoeffding's inequality
 
-One tool to understand the connection between the in-sample and out-of-sample error is *Hoeffding's inequality*. This is a result from probability theory and so we will present it as such. That is, in this section we do not discuss any application to statistical learning.
+One tool to understand the connection between the in-sample and out-of-sample error is *Hoeffding's inequality*. This is a result from probability theory and so we will present it as such. That is, in this section we do not discuss any application to statistical learning. It is not formally part of the course, but for the interested, it gives some theoretical understanding of the relation between the in-sample error and out-of-sample error.
 
 ```{block2, type='note'}
 Hoeffding's inequality states that:
