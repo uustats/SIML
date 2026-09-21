@@ -211,7 +211,7 @@ $$
 
 As an example, we generate some training data from a mixture of normal distributions.
 
-```r
+``` r
 library(mvtnorm)
 set.seed(42)
 
@@ -240,7 +240,7 @@ data.df$y <- as.factor(data.df$y)
 
 Then use R to calculate the hyperplane that minimizes the in-sample error.
 
-```r
+``` r
 library(kernlab)
 
 svm.model <- ksvm(y~x1+x2, data = data.df,
@@ -258,7 +258,7 @@ grid$predicted <- as.factor(predict(svm.model, grid))
 </div>
 We can also calculate the in-sample error
 
-```r
+``` r
 mean(data.df$y != predict(svm.model, data.df))
 ```
 
@@ -268,7 +268,7 @@ mean(data.df$y != predict(svm.model, data.df))
 
 Not so bad, but let us try to improve it. We select some basis functions, $\varphi_m(x)$, $m=1,\ldots, M$ and use the same classifier but with input features $\varphi(x) = (\varphi_1(x),\ldots, \varphi_M(x))$. We can for example choose $\varphi_m$ to be polynomials of increasing order. For order 2, we get the classifier below, an ellipsoid.
 
-```r
+``` r
 library(kernlab)
 
 svm.model <- ksvm(y~poly(x1, x2, degree = 2), data = data.df,
@@ -286,7 +286,7 @@ grid$predicted <- as.factor(predict(svm.model, grid))
 </div>
 This time the in-sample error is
 
-```r
+``` r
 mean(data.df$y != fitted(svm.model))
 ```
 
@@ -296,7 +296,7 @@ mean(data.df$y != fitted(svm.model))
 
 Better. Let us continue with increasing order polynomials, and calculate the error.
 
-```r
+``` r
 library(kernlab)
 
 maxDegree <- 20
@@ -319,7 +319,7 @@ for (degree in seq(1,maxDegree)) {
 
 In-sample error gets smaller as we increase the order of the polynomial. For degree 20, the in-sample error is
 
-```r
+``` r
 error.df$inError[20]
 ```
 
@@ -335,7 +335,7 @@ The classifier looks complex.
 
 Since we know the data generating distribution, we can approximate the out-of-sample error for each classifier, by simulation.
 
-```r
+``` r
 library(mvtnorm)
 set.seed(42)
 
@@ -375,7 +375,7 @@ In the following sections we will investigate the connection between the in-samp
 
 ## Hoeffding's inequality
 
-One tool to understand the connection between the in-sample and out-of-sample error is *Hoeffding's inequality*. This is a result from probability theory and so we will present it as such. That is, in this section we do not discuss any application to statistical learning.
+One tool to understand the connection between the in-sample and out-of-sample error is *Hoeffding's inequality*. This is a result from probability theory and so we will present it as such. That is, in this section we do not discuss any application to statistical learning. It is not formally part of the course, but for the interested, it gives some theoretical understanding of the relation between the in-sample error and out-of-sample error.
 
 \BeginKnitrBlock{note}<div class="note">Hoeffding's inequality states that:
 Let $Y_1,\ldots, Y_n$ be iid with $E[Y_i]=\mu$ and $a\leq Y_i \leq b$. Then for any $\varepsilon>0$,
@@ -465,7 +465,7 @@ Now we generate some data:
 </div>
 We can now calculate the in-sample error:
 
-```r
+``` r
 H <- function(a, b){
   function(x1, x2){
     if(a*x1 + b*x2 > 0) "1"
@@ -495,7 +495,7 @@ error(data.df, h)
 ```
 In this case, $h$ is not a function of the training data so the in-sample error is an unbiased estimate of the out-of-sample error. Since we know the distribution of $X,Y$ we can calculate the out-of-sample error by simulation.
 
-```r
+``` r
 n.samples <- 1e4
 
 data.matrix <- matrix(nrow = n.samples, ncol = 3)
@@ -527,7 +527,7 @@ E_{out}(h) \leq  E_{in}(h) + \sqrt{\frac{\ln \frac{2}{\delta}}{2n}}.
 $$
 Let us say we want to have confidence 95%, that is $\delta = 0.05$, we then have the generalization bound
 
-```r
+``` r
 delta = 0.05
 error(data.df,h) + sqrt(log(2/delta)/(2*nrow(data.df)))
 ```
@@ -755,11 +755,17 @@ and we are thus to choose the parameters $\beta_1,\ldots,\beta_p$ in a good way.
 
 As we have seen, we may specify some function $\varphi_i$ and use $\varphi_1(x),\ldots,\varphi_M(x)$ to predict $y$ and we are still in the case of linear regression. However we need to be careful not to overfit. Let us see a simple example were $\varphi$ are polynomials. First we construct the functions that will generate our data:
 
-```r
+``` r
 library(ggplot2)
 library(gridExtra)
 library(resample)
+```
 
+```
+## Warning: package 'resample' was built under R version 4.6.1
+```
+
+``` r
 gen_data <- function(truth, n.obs = 100) {
   x <- runif(n.obs, min = -2, max = 2)
   y <- truth(x) + rnorm(n.obs) * 0.4
@@ -772,7 +778,7 @@ truth <- function(x) {
 ```
 For convenience, we write a function that fits three different polynomial regressions and returns the plot.
 
-```r
+``` r
 fit_plot <- function(){
   data.train.df <- gen_data(truth)
 
@@ -820,7 +826,7 @@ fit_plot <- function(){
 ```
 Next we fit the polynomial models to four different training sets, generated from the same distribution.
 
-```r
+``` r
 set.seed(42)
 grid.arrange(fit_plot(), fit_plot(), fit_plot(), fit_plot(),
              nrow = 2)
@@ -842,7 +848,7 @@ From the pictures we see that the 2nd degree polynomial has a bias, but for 6th 
 Another way to see the same phenomena is to choose one point, here $x=1.5$, and plot the bias and variance as we vary the degree of the polynomial. We do this for sample size $n=100$ and $n=10000$.
 
 
-```r
+``` r
 library(ggplot2)
 library(gridExtra)
 
@@ -911,11 +917,17 @@ Here $\lambda$ is a tuning parameter that needs to be determined separately. Rid
 
 Let us look at the same example above, this time with a degree 20 polynomial, but penalized with ridge and lasso.
 
-```r
+``` r
 library(ggplot2)
 library(gridExtra)
 library(glmnet)
+```
 
+```
+## Warning: package 'glmnet' was built under R version 4.6.1
+```
+
+``` r
 data.df <- gen_data(truth)
 
 model.ridge <- glmnet(poly(data.df$x,20), data.df$y, alpha = 0 )
@@ -957,7 +969,7 @@ In practice usually $k=5$ or $k=10$ is used.
 
 We will use the Hitters data set from the ISL book and predict the salary of a Baseball player based on various covariates.
 
-```r
+``` r
 library(caret)
 library(ISLR)
 
@@ -966,7 +978,7 @@ Hitters <- na.omit(Hitters)
 ```
 Then we randomly split the data into a train and a test set. We keep 70% of the observations in the training set and the rest in the test set.
 
-```r
+``` r
 set.seed(3)
 training.samples <- caret::createDataPartition(Hitters$Salary, 
                                                p = 0.7, 
@@ -976,7 +988,7 @@ test.data <- Hitters[-training.samples, ]
 ```
 We then do linear regression and calculate the out-of-sample error
 
-```r
+``` r
 ls <- lm(Salary ~., data = train.data)
 predictions <- predict(ls, test.data)
 sqrt(mean((predictions - test.data$Salary)^2))
@@ -987,7 +999,7 @@ sqrt(mean((predictions - test.data$Salary)^2))
 ```
 Next we fit a lasso using 10-fold CV.
 
-```r
+``` r
 lambda.grid <- 10^seq(-2, 2, length = 100)
 
 set.seed(42)
@@ -999,7 +1011,7 @@ lasso <- train(
 ```
 We may plot the cross-validated error against the regularization parameter.
 
-```r
+``` r
 plot(lasso)
 ```
 
@@ -1009,13 +1021,13 @@ plot(lasso)
 </div>
 If we print the parameters, we see that some of them have been set to 0. 
 
-```r
+``` r
 coef(lasso$finalModel, lasso$bestTune$lambda)
 ```
 
 ```
 ## 20 x 1 sparse Matrix of class "dgCMatrix"
-##                        s1
+##                s=17.07353
 ## (Intercept)  -66.88333624
 ## AtBat          .         
 ## Hits           2.00894789
@@ -1039,7 +1051,7 @@ coef(lasso$finalModel, lasso$bestTune$lambda)
 ```
 We calculate the out-of-sample error. 
 
-```r
+``` r
 predictions <- predict(lasso, test.data)
 sqrt(mean((predictions - test.data$Salary)^2))
 ```
@@ -1049,7 +1061,7 @@ sqrt(mean((predictions - test.data$Salary)^2))
 ```
 An improvement over least squares. We might also try elastic-net.
 
-```r
+``` r
 lambda <- 10^seq(-2, 2.5, length = 100)
 alpha <- seq(0, 0.5, length = 10)
 set.seed(42)
@@ -1060,7 +1072,7 @@ e.net <- train(
 )
 ```
 
-```r
+``` r
 plot(e.net)
 ```
 
@@ -1069,7 +1081,7 @@ plot(e.net)
 <p class="caption">(\#fig:elasticNetPlot)Cross-validated error against the regularization parameter for elastic net</p>
 </div>
 
-```r
+``` r
 predictions <- predict(e.net, test.data)
 sqrt( mean((predictions - test.data$Salary)^2) )
 ```
@@ -1083,7 +1095,7 @@ We get a worse out-of-sample error. But we need to keep in mind that the number 
 
 Here we show an application using a dataset on whether or not a patient has diabetes, based on certain diagnostic measurements. First load the data and print some observations
 
-```r
+``` r
 library(caret)
 library(mlbench)
 data("PimaIndiansDiabetes2", package = "mlbench")
@@ -1108,7 +1120,7 @@ Table: (\#tab:unnamed-chunk-36)Diabetes data
 |15 |        5|     166|       72|      19|     175| 25.8|    0.587|  51|pos      |
 Divide the data into a train and a test set.
 
-```r
+``` r
 set.seed(42)
 
 training.samples <- createDataPartition(PimaIndiansDiabetes2$diabetes, 
@@ -1118,14 +1130,14 @@ training.samples <- createDataPartition(PimaIndiansDiabetes2$diabetes,
 train.data  <- PimaIndiansDiabetes2[training.samples, ]
 test.data <- PimaIndiansDiabetes2[-training.samples, ]
 ```
-Then use a SVM, where the parameter is estimated by 10-fold CV. If you have a computer with multiple cores, there may be a speed-up by using the library doMC.
+Then use a SVM, where the parameter is estimated by 10-fold CV. If you have a computer with multiple cores, there may be a speed-up by using the library doParallel.
 
-```r
-library(doMC)
-registerDoMC(cores=8)
+``` r
+library(doParallel)
+registerDoParallel(cores=8)
 ```
 
-```r
+``` r
 model <- train(
   diabetes ~., data = train.data, method = "svmRadial",
   trControl = trainControl("cv", number = 10),
@@ -1135,7 +1147,7 @@ model <- train(
 ```
 We may print a summary of the training of the model
 
-```r
+``` r
 print(model)
 ```
 
@@ -1169,7 +1181,7 @@ print(model)
 ```
 We can also plot the cross-validated accuracy as a function of the regularization parameter
 
-```r
+``` r
 plot(model)
 ```
 
@@ -1179,7 +1191,7 @@ plot(model)
 </div>
 <p>The final results are</p>
 
-```r
+``` r
 predicted <- predict(model, test.data)
 mean(predicted == test.data$diabetes)
 ```

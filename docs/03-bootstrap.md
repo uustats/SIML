@@ -69,11 +69,18 @@ I(x_i\leq x) =
 $$</div>\EndKnitrBlock{note}
 In the example below, we draw a sample of size 100 from the $\mathsf{N}(0,1)$ distribution and plot the empirical distribution function of the sample. This can be done easily using gg-plot.
 
-```r
+``` r
 set.seed(42)
 data.df <- data.frame( x = rnorm(100) )
 
 library(ggplot2)
+```
+
+```
+## Warning: package 'ggplot2' was built under R version 4.6.1
+```
+
+``` r
 cbp1 <- c("#999999", "#E69F00", "#56B4E9", "#009E73",
           "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
 
@@ -82,6 +89,14 @@ ggplot(data.df, aes(x)) +
   stat_ecdf(geom = "step", size = 1) +
   labs( y = "F(x)", x = "x") + 
   theme_minimal()
+```
+
+```
+## Warning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.
+## ℹ Please use `linewidth` instead.
+## This warning is displayed once per session.
+## Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
+## generated.
 ```
 
 <div class="figure" style="text-align: center">
@@ -126,7 +141,7 @@ $$
 $$
 That is, it is the smallest $x$ such that $\hat F_n(x)\geq p$. Looking at the picture it seems as in our sample, for example, $\hat F_n^{-1}(0.75)\approx 0.7$. Calculating precisely:
 
-```r
+``` r
 quantile(data.df$x, probs = c(0.75), type = 1)
 ```
 
@@ -158,7 +173,7 @@ $$
 
 As an example, let us consider $X_1,\ldots, X_{n}\overset{iid}\sim \mathsf{Exp}(1)$. We would like to know the distribution of the sample median and in particular the expected value and variance.
 
-```r
+``` r
 n <- 100
 B <- 1000
 
@@ -178,7 +193,7 @@ mean(tstar)
 ## [1] 0.6964009
 ```
 
-```r
+``` r
 var(tstar)
 ```
 
@@ -193,7 +208,10 @@ $$
 
 This method is called the bootstrap.
 
-\BeginKnitrBlock{note}<div class="note">Bootstrap variance estimation:
+````
+::: {.note}
+````
+Bootstrap variance estimation:
 Choose $B$ as a large number, then for $b=1,\ldots, B$
   
 1. Draw $X_1^\star,\ldots, X_n^\star \overset{iid}{\sim} \hat F_n$.
@@ -201,12 +219,15 @@ Choose $B$ as a large number, then for $b=1,\ldots, B$
 3. Approximate $Var_F(T_n)$ by
 $$
   v_{boot} = \frac{1}{B}\sum_{b=1}^B\left( t^\star_{b} - \frac{1}{B}\sum_{r=1}^B t^\star_{r} \right)^2
-$$</div>\EndKnitrBlock{note}
+$$
+````
+:::
+````
 <p>To be clear, step 1 above, draw $X_1^\star,\ldots, X_n^\star \overset{iid}{\sim} \hat F_n$, simply means to draw one of the observations in the sample randomly and call it $X_1^\star$. Put the observation back in the sample and independently draw another observation, call it $X_2^\star$ and so on.</p>
 
 Let us implement this method to calculate the standard error of the median using the normally distributed data set from the previous section:
 
-```r
+``` r
 T <- median
 n <- nrow(data.df)
 B <- 1000
@@ -224,8 +245,15 @@ sd(tstar)
 ```
 In practice we would rather use the boot library.
 
-```r
+``` r
 library(boot)
+```
+
+```
+## Warning: package 'boot' was built under R version 4.6.1
+```
+
+``` r
 boot(data = data.df, 
      statistic = function(data, index){ T(data$x[index]) }, 
      R = 1000)
@@ -250,7 +278,7 @@ Note that the two bootstrap functions do not give exactly the same result. This 
 
 Since here we know $F$ we can calculate the standard deviation by simulating from $F$, an alternative not available in practice.
 
-```r
+``` r
 n <- nrow(data.df)
 B <- 1000
 Tsim <- array(dim = B)
@@ -299,7 +327,7 @@ C_n = \left[ \hat\theta_n - (\theta^\star_{1-\alpha/2} - \hat\theta_n) , \hat\th
 $$
 Let us implement this on the same data set as above.
 
-```r
+``` r
 alpha <- 0.05
 T <- median
 n <- nrow(data.df)
@@ -321,7 +349,7 @@ lowerCI
 ## [1] -0.2250317
 ```
 
-```r
+``` r
 upperCI <- 2*T(data.df$x) - q[2]
 upperCI
 ```
@@ -332,7 +360,7 @@ upperCI
 
 Even simpler is to use the boot library.
 
-```r
+``` r
 library(boot)
 boot.result<- boot(data = data.df, 
                    statistic = function(data, index) T(data$x[index]), 
@@ -356,7 +384,7 @@ boot.ci(boot.result, type = "basic")
 
 A better alternative which we do not cover in this course is the bias-corrected CI. It is however just as easy to use.
 
-```r
+``` r
 library(boot)
 boot.result<- boot(data = data.df, 
                    statistic = function(data, index) T(data$x[index]), 
@@ -390,7 +418,7 @@ As an example, let us say that we have a random sample from $\mathsf N(\mu,\sigm
 
 Implementing this is not complicated.
 
-```r
+``` r
 T <- median
 n <- nrow(data.df)
 B <- 1000
@@ -417,7 +445,7 @@ Here we present an application of what we have learned in this chapter. The appl
 
 The data set consists of measurements on the kidney function of 157 individuals. We fit a smoothing spline to the data and plot.
 
-```r
+``` r
 kidney.df <- read.table("data/kidney.dat", header = TRUE)
 
 kidney.spline <- smooth.spline(kidney.df$age, kidney.df$tot, df = 10)
@@ -443,7 +471,7 @@ ggplot(kidney.df, aes(x = age, y = tot)) +
 
 <p>Now we can predict the kidney function of a new individual of age 50.</p>
 
-```r
+``` r
 predict(kidney.spline, x = 50)$y
 ```
 
@@ -452,7 +480,7 @@ predict(kidney.spline, x = 50)$y
 ```
 Let us use bootstrap to find the standard deviation of this prediction and construct a CI.
 
-```r
+``` r
 library(boot)
 
 T <- function(data,index){
@@ -478,7 +506,7 @@ boot.result
 ## t1* -0.7232874 0.0455268   0.6037417
 ```
 
-```r
+``` r
 boot.ci(boot.result, type = "bca")
 ```
 

@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>4.5 VC-dimension | Lecture notes for Statistical Inference and Machine Learning</title>
   <meta name="description" content="These are the lecture notes for the course Statistical Inference and Machine Learning at the Department of statistics, Uppsala University." />
-  <meta name="generator" content="bookdown 0.35 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.48 and GitBook 2.6.7" />
 
   <meta property="og:title" content="4.5 VC-dimension | Lecture notes for Statistical Inference and Machine Learning" />
   <meta property="og:type" content="book" />
@@ -20,10 +20,10 @@
   <meta name="twitter:description" content="These are the lecture notes for the course Statistical Inference and Machine Learning at the Department of statistics, Uppsala University." />
   
 
-<meta name="author" content="Patrik Andersson" />
+<meta name="author" content="Patrik Andersson, with revisions by Hannes Waldetoft" />
 
 
-<meta name="date" content="2023-08-24" />
+<meta name="date" content="2026-09-21" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -55,6 +55,7 @@
 
 
 <style type="text/css">
+html { -webkit-text-size-adjust: 100%; }
 pre > code.sourceCode { white-space: pre; position: relative; }
 pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
@@ -266,7 +267,7 @@ Figure 4.11: Three points can be shattered but not four
 </p>
 </div>
 <p>
-We see a pattern here, the VC-dimension is equal to the number of parameters of <span class="math inline">\(\mathcal H\)</span>. This is however not always true. As a counterexample, take the functions <span class="math inline">\(\left\{ x\mapsto sin(\omega x)\mid \omega\in \mathbb R \right\}\)</span>. Then label a point <span class="math inline">\(x\)</span> according to the sign of <span class="math inline">\(sin(\omega x)\)</span>. There is only one parameter, but any <span class="math inline">\(S\)</span> can be shattered and so <span class="math inline">\(d_{VC}=\infty\)</span>.
+We see a pattern here, the VC-dimension is equal to the number of parameters of <span class="math inline">\(\mathcal H\)</span>. This is however not always true. As a counterexample, take the functions <span class="math inline">\(\left\{ x\mapsto sin(\omega x)\mid  \omega\in \mathbb R \right\}\)</span>. Then label a point <span class="math inline">\(x\)</span> according to the sign of <span class="math inline">\(sin(\omega x)\)</span>. There is only one parameter, but any <span class="math inline">\(S\)</span> can be shattered and so <span class="math inline">\(d_{VC}=\infty\)</span>.
 </p>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:vcDim4"></span>
 <img src="04-statisticalLearning_files/figure-html/vcDim4-1.png" alt="A one parameter function can shatter any number of points" width="80%" />
@@ -277,7 +278,7 @@ Figure 4.12: A one parameter function can shatter any number of points
 The usefulness of the VC-dimension comes from the following result.
 
 <div class="note">
-Let <span class="math inline">\(\mathcal H\)</span> have VC-dimension <span class="math inline">\(d_{VC}\)</span>. Then for any <span class="math inline">\(\delta&gt;0\)</span>, with probability at least <span class="math inline">\(1-\delta\)</span>, the following holds for all <span class="math inline">\(h\in \mathcal H\)</span> <span class="citation">(<a href="#ref-mohri2018foundations">Mohri, Rostamizadeh, and Talwalkar 2018</a>)</span>:
+Let <span class="math inline">\(\mathcal H\)</span> have VC-dimension <span class="math inline">\(d_{VC}\)</span>. Then for any <span class="math inline">\(\delta&gt;0\)</span>, with probability at least <span class="math inline">\(1-\delta\)</span>, the following holds for all <span class="math inline">\(h\in \mathcal H\)</span> <span class="citation">(<a href="#ref-mohri2018foundations">Mohri et al. 2018</a>)</span>:
 <span class="math display">\[
   E_{out}(h) \leq E_{in}(h) +\sqrt{\frac{2d_{VC}\ln \frac{en}{d_{VC}}}{n}} + \sqrt{\frac{\ln \frac{1}{\delta}}{2n}   }
 \]</span>
@@ -323,42 +324,42 @@ Mohri, Mehryar, Afshin Rostamizadeh, and Ameet Talwalkar. 2018. <em>Foundations 
 <script>
 gitbook.require(["gitbook"], function(gitbook) {
 gitbook.start({
-"sharing": {
-"github": false,
-"facebook": true,
-"twitter": true,
-"linkedin": false,
-"weibo": false,
-"instapaper": false,
-"vk": false,
-"whatsapp": false,
-"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
-},
-"fontsettings": {
-"theme": "white",
-"family": "sans",
-"size": 2
-},
-"edit": {
-"link": null,
-"text": null
-},
-"history": {
-"link": null,
-"text": null
-},
-"view": {
-"link": null,
-"text": null
-},
-"download": null,
-"search": {
-"engine": "fuse",
-"options": null
-},
-"toc": {
-"collapse": "subsection"
-}
+  "sharing": {
+    "github": false,
+    "facebook": true,
+    "twitter": true,
+    "linkedin": false,
+    "weibo": false,
+    "instapaper": false,
+    "vk": false,
+    "whatsapp": false,
+    "all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+  },
+  "fontsettings": {
+    "theme": "white",
+    "family": "sans",
+    "size": 2
+  },
+  "edit": {
+    "link": null,
+    "text": null
+  },
+  "history": {
+    "link": null,
+    "text": null
+  },
+  "view": {
+    "link": null,
+    "text": null
+  },
+  "download": null,
+  "search": {
+    "engine": "fuse",
+    "options": null
+  },
+  "toc": {
+    "collapse": "subsection"
+  }
 });
 });
 </script>

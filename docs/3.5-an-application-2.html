@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>3.5 An application | Lecture notes for Statistical Inference and Machine Learning</title>
   <meta name="description" content="These are the lecture notes for the course Statistical Inference and Machine Learning at the Department of statistics, Uppsala University." />
-  <meta name="generator" content="bookdown 0.35 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.48 and GitBook 2.6.7" />
 
   <meta property="og:title" content="3.5 An application | Lecture notes for Statistical Inference and Machine Learning" />
   <meta property="og:type" content="book" />
@@ -20,10 +20,10 @@
   <meta name="twitter:description" content="These are the lecture notes for the course Statistical Inference and Machine Learning at the Department of statistics, Uppsala University." />
   
 
-<meta name="author" content="Patrik Andersson" />
+<meta name="author" content="Patrik Andersson, with revisions by Hannes Waldetoft" />
 
 
-<meta name="date" content="2023-08-24" />
+<meta name="date" content="2026-09-21" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -55,6 +55,7 @@
 
 
 <style type="text/css">
+html { -webkit-text-size-adjust: 100%; }
 pre > code.sourceCode { white-space: pre; position: relative; }
 pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
@@ -245,21 +246,21 @@ div.csl-indent {
 <h2><span class="header-section-number">3.5</span> An application<a href="3.5-an-application-2.html#an-application-2" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>Here we present an application of what we have learned in this chapter. The application is based on an example in <span class="citation">Efron and Hastie (<a href="#ref-efron2016computer">2016</a>)</span>.</p>
 <p>The data set consists of measurements on the kidney function of 157 individuals. We fit a smoothing spline to the data and plot.</p>
-<div class="sourceCode" id="cb107"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb107-1"><a href="3.5-an-application-2.html#cb107-1" tabindex="-1"></a>kidney.df <span class="ot">&lt;-</span> <span class="fu">read.table</span>(<span class="st">&quot;data/kidney.dat&quot;</span>, <span class="at">header =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb107-2"><a href="3.5-an-application-2.html#cb107-2" tabindex="-1"></a></span>
-<span id="cb107-3"><a href="3.5-an-application-2.html#cb107-3" tabindex="-1"></a>kidney.spline <span class="ot">&lt;-</span> <span class="fu">smooth.spline</span>(kidney.df<span class="sc">$</span>age, kidney.df<span class="sc">$</span>tot, <span class="at">df =</span> <span class="dv">10</span>)</span>
-<span id="cb107-4"><a href="3.5-an-application-2.html#cb107-4" tabindex="-1"></a></span>
-<span id="cb107-5"><a href="3.5-an-application-2.html#cb107-5" tabindex="-1"></a>kidney.df<span class="sc">$</span>spline <span class="ot">&lt;-</span> <span class="fu">predict</span>(kidney.spline, <span class="at">x =</span> kidney.df<span class="sc">$</span>age)<span class="sc">$</span>y</span>
-<span id="cb107-6"><a href="3.5-an-application-2.html#cb107-6" tabindex="-1"></a></span>
-<span id="cb107-7"><a href="3.5-an-application-2.html#cb107-7" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
-<span id="cb107-8"><a href="3.5-an-application-2.html#cb107-8" tabindex="-1"></a>cbp1 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;#999999&quot;</span>, <span class="st">&quot;#E69F00&quot;</span>, <span class="st">&quot;#56B4E9&quot;</span>, <span class="st">&quot;#009E73&quot;</span>,</span>
-<span id="cb107-9"><a href="3.5-an-application-2.html#cb107-9" tabindex="-1"></a>          <span class="st">&quot;#F0E442&quot;</span>, <span class="st">&quot;#0072B2&quot;</span>, <span class="st">&quot;#D55E00&quot;</span>, <span class="st">&quot;#CC79A7&quot;</span>)</span>
-<span id="cb107-10"><a href="3.5-an-application-2.html#cb107-10" tabindex="-1"></a></span>
-<span id="cb107-11"><a href="3.5-an-application-2.html#cb107-11" tabindex="-1"></a><span class="fu">ggplot</span>(kidney.df, <span class="fu">aes</span>(<span class="at">x =</span> age, <span class="at">y =</span> tot)) <span class="sc">+</span></span>
-<span id="cb107-12"><a href="3.5-an-application-2.html#cb107-12" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb107-13"><a href="3.5-an-application-2.html#cb107-13" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y =</span> spline), <span class="at">color =</span> cbp1[<span class="dv">2</span>], <span class="at">size =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
-<span id="cb107-14"><a href="3.5-an-application-2.html#cb107-14" tabindex="-1"></a>  <span class="fu">labs</span>( <span class="at">y =</span> <span class="st">&quot;kidney function&quot;</span>, <span class="at">x=</span><span class="st">&quot;age&quot;</span>) <span class="sc">+</span> </span>
-<span id="cb107-15"><a href="3.5-an-application-2.html#cb107-15" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb123"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb123-1"><a href="3.5-an-application-2.html#cb123-1" tabindex="-1"></a>kidney.df <span class="ot">&lt;-</span> <span class="fu">read.table</span>(<span class="st">&quot;data/kidney.dat&quot;</span>, <span class="at">header =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb123-2"><a href="3.5-an-application-2.html#cb123-2" tabindex="-1"></a></span>
+<span id="cb123-3"><a href="3.5-an-application-2.html#cb123-3" tabindex="-1"></a>kidney.spline <span class="ot">&lt;-</span> <span class="fu">smooth.spline</span>(kidney.df<span class="sc">$</span>age, kidney.df<span class="sc">$</span>tot, <span class="at">df =</span> <span class="dv">10</span>)</span>
+<span id="cb123-4"><a href="3.5-an-application-2.html#cb123-4" tabindex="-1"></a></span>
+<span id="cb123-5"><a href="3.5-an-application-2.html#cb123-5" tabindex="-1"></a>kidney.df<span class="sc">$</span>spline <span class="ot">&lt;-</span> <span class="fu">predict</span>(kidney.spline, <span class="at">x =</span> kidney.df<span class="sc">$</span>age)<span class="sc">$</span>y</span>
+<span id="cb123-6"><a href="3.5-an-application-2.html#cb123-6" tabindex="-1"></a></span>
+<span id="cb123-7"><a href="3.5-an-application-2.html#cb123-7" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb123-8"><a href="3.5-an-application-2.html#cb123-8" tabindex="-1"></a>cbp1 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;#999999&quot;</span>, <span class="st">&quot;#E69F00&quot;</span>, <span class="st">&quot;#56B4E9&quot;</span>, <span class="st">&quot;#009E73&quot;</span>,</span>
+<span id="cb123-9"><a href="3.5-an-application-2.html#cb123-9" tabindex="-1"></a>          <span class="st">&quot;#F0E442&quot;</span>, <span class="st">&quot;#0072B2&quot;</span>, <span class="st">&quot;#D55E00&quot;</span>, <span class="st">&quot;#CC79A7&quot;</span>)</span>
+<span id="cb123-10"><a href="3.5-an-application-2.html#cb123-10" tabindex="-1"></a></span>
+<span id="cb123-11"><a href="3.5-an-application-2.html#cb123-11" tabindex="-1"></a><span class="fu">ggplot</span>(kidney.df, <span class="fu">aes</span>(<span class="at">x =</span> age, <span class="at">y =</span> tot)) <span class="sc">+</span></span>
+<span id="cb123-12"><a href="3.5-an-application-2.html#cb123-12" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb123-13"><a href="3.5-an-application-2.html#cb123-13" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y =</span> spline), <span class="at">color =</span> cbp1[<span class="dv">2</span>], <span class="at">size =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb123-14"><a href="3.5-an-application-2.html#cb123-14" tabindex="-1"></a>  <span class="fu">labs</span>( <span class="at">y =</span> <span class="st">&quot;kidney function&quot;</span>, <span class="at">x=</span><span class="st">&quot;age&quot;</span>) <span class="sc">+</span> </span>
+<span id="cb123-15"><a href="3.5-an-application-2.html#cb123-15" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:kidneyData"></span>
 <img src="03-bootstrap_files/figure-html/kidneyData-1.png" alt="Kidney function vs age" width="80%" />
 <p class="caption">
@@ -269,18 +270,18 @@ Figure 3.2: Kidney function vs age
 <p>
 Now we can predict the kidney function of a new individual of age 50.
 </p>
-<div class="sourceCode" id="cb108"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb108-1"><a href="3.5-an-application-2.html#cb108-1" tabindex="-1"></a><span class="fu">predict</span>(kidney.spline, <span class="at">x =</span> <span class="dv">50</span>)<span class="sc">$</span>y</span></code></pre></div>
+<div class="sourceCode" id="cb124"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb124-1"><a href="3.5-an-application-2.html#cb124-1" tabindex="-1"></a><span class="fu">predict</span>(kidney.spline, <span class="at">x =</span> <span class="dv">50</span>)<span class="sc">$</span>y</span></code></pre></div>
 <pre><code>## [1] -0.7232874</code></pre>
 <p>Let us use bootstrap to find the standard deviation of this prediction and construct a CI.</p>
-<div class="sourceCode" id="cb110"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb110-1"><a href="3.5-an-application-2.html#cb110-1" tabindex="-1"></a><span class="fu">library</span>(boot)</span>
-<span id="cb110-2"><a href="3.5-an-application-2.html#cb110-2" tabindex="-1"></a></span>
-<span id="cb110-3"><a href="3.5-an-application-2.html#cb110-3" tabindex="-1"></a>T <span class="ot">&lt;-</span> <span class="cf">function</span>(data,index){</span>
-<span id="cb110-4"><a href="3.5-an-application-2.html#cb110-4" tabindex="-1"></a>  s <span class="ot">&lt;-</span> <span class="fu">smooth.spline</span>(data<span class="sc">$</span>age[index], data<span class="sc">$</span>tot[index], <span class="at">df =</span> <span class="dv">10</span>)</span>
-<span id="cb110-5"><a href="3.5-an-application-2.html#cb110-5" tabindex="-1"></a>  <span class="fu">predict</span>(s, <span class="at">x =</span> <span class="dv">50</span>)<span class="sc">$</span>y</span>
-<span id="cb110-6"><a href="3.5-an-application-2.html#cb110-6" tabindex="-1"></a>}</span>
-<span id="cb110-7"><a href="3.5-an-application-2.html#cb110-7" tabindex="-1"></a></span>
-<span id="cb110-8"><a href="3.5-an-application-2.html#cb110-8" tabindex="-1"></a>boot.result<span class="ot">&lt;-</span> <span class="fu">boot</span>(<span class="at">data =</span> kidney.df, <span class="at">statistic =</span> T, <span class="at">R =</span> <span class="dv">1000</span>)</span>
-<span id="cb110-9"><a href="3.5-an-application-2.html#cb110-9" tabindex="-1"></a>boot.result</span></code></pre></div>
+<div class="sourceCode" id="cb126"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb126-1"><a href="3.5-an-application-2.html#cb126-1" tabindex="-1"></a><span class="fu">library</span>(boot)</span>
+<span id="cb126-2"><a href="3.5-an-application-2.html#cb126-2" tabindex="-1"></a></span>
+<span id="cb126-3"><a href="3.5-an-application-2.html#cb126-3" tabindex="-1"></a>T <span class="ot">&lt;-</span> <span class="cf">function</span>(data,index){</span>
+<span id="cb126-4"><a href="3.5-an-application-2.html#cb126-4" tabindex="-1"></a>  s <span class="ot">&lt;-</span> <span class="fu">smooth.spline</span>(data<span class="sc">$</span>age[index], data<span class="sc">$</span>tot[index], <span class="at">df =</span> <span class="dv">10</span>)</span>
+<span id="cb126-5"><a href="3.5-an-application-2.html#cb126-5" tabindex="-1"></a>  <span class="fu">predict</span>(s, <span class="at">x =</span> <span class="dv">50</span>)<span class="sc">$</span>y</span>
+<span id="cb126-6"><a href="3.5-an-application-2.html#cb126-6" tabindex="-1"></a>}</span>
+<span id="cb126-7"><a href="3.5-an-application-2.html#cb126-7" tabindex="-1"></a></span>
+<span id="cb126-8"><a href="3.5-an-application-2.html#cb126-8" tabindex="-1"></a>boot.result<span class="ot">&lt;-</span> <span class="fu">boot</span>(<span class="at">data =</span> kidney.df, <span class="at">statistic =</span> T, <span class="at">R =</span> <span class="dv">1000</span>)</span>
+<span id="cb126-9"><a href="3.5-an-application-2.html#cb126-9" tabindex="-1"></a>boot.result</span></code></pre></div>
 <pre><code>## 
 ## ORDINARY NONPARAMETRIC BOOTSTRAP
 ## 
@@ -292,7 +293,7 @@ Now we can predict the kidney function of a new individual of age 50.
 ## Bootstrap Statistics :
 ##       original    bias    std. error
 ## t1* -0.7232874 0.0455268   0.6037417</code></pre>
-<div class="sourceCode" id="cb112"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb112-1"><a href="3.5-an-application-2.html#cb112-1" tabindex="-1"></a><span class="fu">boot.ci</span>(boot.result, <span class="at">type =</span> <span class="st">&quot;bca&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb128"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb128-1"><a href="3.5-an-application-2.html#cb128-1" tabindex="-1"></a><span class="fu">boot.ci</span>(boot.result, <span class="at">type =</span> <span class="st">&quot;bca&quot;</span>)</span></code></pre></div>
 <pre><code>## BOOTSTRAP CONFIDENCE INTERVAL CALCULATIONS
 ## Based on 1000 bootstrap replicates
 ## 
@@ -330,42 +331,42 @@ Efron, Bradley, and Trevor Hastie. 2016. <em>Computer Age Statistical Inference<
 <script>
 gitbook.require(["gitbook"], function(gitbook) {
 gitbook.start({
-"sharing": {
-"github": false,
-"facebook": true,
-"twitter": true,
-"linkedin": false,
-"weibo": false,
-"instapaper": false,
-"vk": false,
-"whatsapp": false,
-"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
-},
-"fontsettings": {
-"theme": "white",
-"family": "sans",
-"size": 2
-},
-"edit": {
-"link": null,
-"text": null
-},
-"history": {
-"link": null,
-"text": null
-},
-"view": {
-"link": null,
-"text": null
-},
-"download": null,
-"search": {
-"engine": "fuse",
-"options": null
-},
-"toc": {
-"collapse": "subsection"
-}
+  "sharing": {
+    "github": false,
+    "facebook": true,
+    "twitter": true,
+    "linkedin": false,
+    "weibo": false,
+    "instapaper": false,
+    "vk": false,
+    "whatsapp": false,
+    "all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+  },
+  "fontsettings": {
+    "theme": "white",
+    "family": "sans",
+    "size": 2
+  },
+  "edit": {
+    "link": null,
+    "text": null
+  },
+  "history": {
+    "link": null,
+    "text": null
+  },
+  "view": {
+    "link": null,
+    "text": null
+  },
+  "download": null,
+  "search": {
+    "engine": "fuse",
+    "options": null
+  },
+  "toc": {
+    "collapse": "subsection"
+  }
 });
 });
 </script>

@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>4.3 Hoeffding’s inequality | Lecture notes for Statistical Inference and Machine Learning</title>
   <meta name="description" content="These are the lecture notes for the course Statistical Inference and Machine Learning at the Department of statistics, Uppsala University." />
-  <meta name="generator" content="bookdown 0.35 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.48 and GitBook 2.6.7" />
 
   <meta property="og:title" content="4.3 Hoeffding’s inequality | Lecture notes for Statistical Inference and Machine Learning" />
   <meta property="og:type" content="book" />
@@ -20,10 +20,10 @@
   <meta name="twitter:description" content="These are the lecture notes for the course Statistical Inference and Machine Learning at the Department of statistics, Uppsala University." />
   
 
-<meta name="author" content="Patrik Andersson" />
+<meta name="author" content="Patrik Andersson, with revisions by Hannes Waldetoft" />
 
 
-<meta name="date" content="2023-08-24" />
+<meta name="date" content="2026-09-21" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -55,6 +55,7 @@
 
 
 <style type="text/css">
+html { -webkit-text-size-adjust: 100%; }
 pre > code.sourceCode { white-space: pre; position: relative; }
 pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
@@ -243,7 +244,7 @@ div.csl-indent {
             <section class="normal" id="section-">
 <div id="hoeffdings-inequality" class="section level2 hasAnchor" number="4.3">
 <h2><span class="header-section-number">4.3</span> Hoeffding’s inequality<a href="4.3-hoeffdings-inequality.html#hoeffdings-inequality" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>One tool to understand the connection between the in-sample and out-of-sample error is <em>Hoeffding’s inequality</em>. This is a result from probability theory and so we will present it as such. That is, in this section we do not discuss any application to statistical learning.</p>
+<p>One tool to understand the connection between the in-sample and out-of-sample error is <em>Hoeffding’s inequality</em>. This is a result from probability theory and so we will present it as such. That is, in this section we do not discuss any application to statistical learning. It is not formally part of the course, but for the interested, it gives some theoretical understanding of the relation between the in-sample error and out-of-sample error.</p>
 
 <div class="note">
 Hoeffding’s inequality states that:
@@ -279,7 +280,7 @@ We would like to show that <span class="math inline">\(pe^t+1-p\leq e^{tp+t^2/8}
 <span class="math display">\[
 P\left( \bar Y_n \geq p +  \varepsilon  \right) \leq e^{-tn(p+\varepsilon)}E\left[ e^{t Y_i } \right]^n \leq e^{-tn(p+\varepsilon)} e^{ntp+nt^2/8} = e^{-nt\varepsilon + nt^2/8} \leq e^{-2n\varepsilon^2},
 \]</span>
-which is what we want. In the last step we used that <span class="math inline">\(-nt\varepsilon + nt^2/8\)</span> has a maximum at <span class="math inline">\(t=4\varepsilon\)</span>, which is easy to check. A similar argument will give that <span class="math inline">\(P\left( \bar Y_n \leq p - \varepsilon \right)\)</span> can be bounded in the same way and then we arrive at Hoeffding’s inequality.</p>
+which is what we want. In the last step we used that <span class="math inline">\(-nt\varepsilon + nt^2/8\)</span> has a maximum at <span class="math inline">\(t=4\varepsilon\)</span>, which is easy to check. A similar argument will give that <span class="math inline">\(P\left( \bar Y_n \leq p -  \varepsilon  \right)\)</span> can be bounded in the same way and then we arrive at Hoeffding’s inequality.</p>
 <p>So, we need to study <span class="math inline">\(pe^t+1-p\)</span> and <span class="math inline">\(e^{tp+t^2/8}\)</span>. First note that the inequality is true if and only if
 <span class="math display">\[
 f(t):=\ln (pe^t+1-p) \leq tp+t^2/8,
@@ -333,42 +334,42 @@ Stated another way, with probability at least <span class="math inline">\(1-\del
 <script>
 gitbook.require(["gitbook"], function(gitbook) {
 gitbook.start({
-"sharing": {
-"github": false,
-"facebook": true,
-"twitter": true,
-"linkedin": false,
-"weibo": false,
-"instapaper": false,
-"vk": false,
-"whatsapp": false,
-"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
-},
-"fontsettings": {
-"theme": "white",
-"family": "sans",
-"size": 2
-},
-"edit": {
-"link": null,
-"text": null
-},
-"history": {
-"link": null,
-"text": null
-},
-"view": {
-"link": null,
-"text": null
-},
-"download": null,
-"search": {
-"engine": "fuse",
-"options": null
-},
-"toc": {
-"collapse": "subsection"
-}
+  "sharing": {
+    "github": false,
+    "facebook": true,
+    "twitter": true,
+    "linkedin": false,
+    "weibo": false,
+    "instapaper": false,
+    "vk": false,
+    "whatsapp": false,
+    "all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+  },
+  "fontsettings": {
+    "theme": "white",
+    "family": "sans",
+    "size": 2
+  },
+  "edit": {
+    "link": null,
+    "text": null
+  },
+  "history": {
+    "link": null,
+    "text": null
+  },
+  "view": {
+    "link": null,
+    "text": null
+  },
+  "download": null,
+  "search": {
+    "engine": "fuse",
+    "options": null
+  },
+  "toc": {
+    "collapse": "subsection"
+  }
 });
 });
 </script>

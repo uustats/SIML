@@ -175,7 +175,9 @@ $$
 
 This method is called the bootstrap.
 
-```{block2 type='note'}
+````
+::: {.note}
+````
 Bootstrap variance estimation:
 Choose $B$ as a large number, then for $b=1,\ldots, B$
   
@@ -185,7 +187,9 @@ Choose $B$ as a large number, then for $b=1,\ldots, B$
 $$
   v_{boot} = \frac{1}{B}\sum_{b=1}^B\left( t^\star_{b} - \frac{1}{B}\sum_{r=1}^B t^\star_{r} \right)^2
 $$
-```
+````
+:::
+````
 <p>To be clear, step 1 above, draw $X_1^\star,\ldots, X_n^\star \overset{iid}{\sim} \hat F_n$, simply means to draw one of the observations in the sample randomly and call it $X_1^\star$. Put the observation back in the sample and independently draw another observation, call it $X_2^\star$ and so on.</p>
 
 Let us implement this method to calculate the standard error of the median using the normally distributed data set from the previous section:

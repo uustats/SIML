@@ -45,6 +45,11 @@ The principle that we will follow to estimate parameters is that since $p=0.4$ g
 $$
 L(p) := p^3(1-p)^7.
 $$
+
+```
+## Warning: package 'ggplot2' was built under R version 4.6.1
+```
+
 <div class="figure" style="text-align: center">
 <img src="01-likelihood_files/figure-html/likelihood-1.png" alt="Likelihood of the sample" width="80%" />
 <p class="caption">(\#fig:likelihood)Likelihood of the sample</p>
@@ -101,7 +106,7 @@ Let us say we observe a sample of size 100.
 
 We define a function in R that calculates the log-likelihood
 
-```r
+``` r
 logLn <- function(lambda, data){
   n <- length(data)
   tbar <- mean(data)
@@ -112,7 +117,7 @@ logLn <- function(lambda, data){
 
 Then we may calculate the log-likelihood of, for example, $\lambda = 0.1$,
 
-```r
+``` r
 logLn(0.1, t)
 ```
 
@@ -122,6 +127,13 @@ logLn(0.1, t)
 Here the variable `t` is a vector that contains the observations.
 
 <p>Let us plot the log-likelihood for a range of $\lambda$-values.</p>
+
+```
+## Warning in geom_point(aes(x = 1/mean(t), y = logLn(1/mean(t), t)), colour = palette.colors(2), : All aesthetics have length 1, but the data has 2 rows.
+## ℹ Please consider using `annotate()` or provide this layer with data containing
+##   a single row.
+```
+
 <div class="figure" style="text-align: center">
 <img src="01-likelihood_files/figure-html/log-likelihood-1.png" alt="Log likelihood of the sample" width="80%" />
 <p class="caption">(\#fig:log-likelihood)Log likelihood of the sample</p>
@@ -137,7 +149,7 @@ $$
 $$
 With solution $\hat\lambda =1/ \bar t$. For this sample:
 
-```r
+``` r
 lambdaHat <- 1/mean(t)
 lambdaHat
 ```
@@ -147,7 +159,7 @@ lambdaHat
 ```
 We may also find the estimate using numerical optimization.
 
-```r
+``` r
 optimResult <- optimise(
   logLn,
   lower = 0.01, 
@@ -163,6 +175,25 @@ optimResult$maximum
 
 ## Hypothesis testing
 In the previous section we saw how to estimate unknown parameters using maximum likelihood. While this is all well and good, we would like to also be able to test hypotheses regarding parameters. Consider Figure \@ref(fig:hypTestIllustration). 
+
+```
+## Warning: package 'latex2exp' was built under R version 4.6.1
+```
+
+```
+## Warning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.
+## ℹ Please use `linewidth` instead.
+## This warning is displayed once per session.
+## Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
+## generated.
+```
+
+```
+## Warning in geom_point(aes(x = 0.9, y = f(0.9)), colour = palette.colors(2), : All aesthetics have length 1, but the data has 2 rows.
+## ℹ Please consider using `annotate()` or provide this layer with data containing
+##   a single row.
+```
+
 <div class="figure" style="text-align: center">
 <img src="01-likelihood_files/figure-html/hypTestIllustration-1.png" alt="Log likelihood of the sample" width="80%" />
 <p class="caption">(\#fig:hypTestIllustration)Log likelihood of the sample</p>
@@ -249,7 +280,7 @@ $$
 
 Let us implement this:
 
-```r
+``` r
 alpha <- 0.05
 lambda0 <- 0.1
 n <- 100
@@ -263,7 +294,7 @@ upperCriticalValue
 ## [1] 0.1229045
 ```
 
-```r
+``` r
 lowerCriticalValue
 ```
 
@@ -281,7 +312,7 @@ $$
 2P\left( \Gamma(n,\lambda_0) < \frac{n}{\hat\lambda} \right).
 $$
 
-```r
+``` r
 2* pgamma(n/lambdaHat, shape = n, rate = lambda0)
 ```
 
@@ -536,7 +567,7 @@ Which is Wilks' theorem.
 
 Let us again apply this to the exponential distribution. Of course, we have already found the exact likelihood ratio test, so we would in reality not use an asymptotic test in this case. Nonetheless, we can calculate it as:
 
-```r
+``` r
 lrStatistic <- 2*(logLn(optimResult$maximum, t) - logLn(0.1, t))
 lrStatistic
 ```
@@ -546,7 +577,7 @@ lrStatistic
 ```
 Recall that we reject $H_0$ if $\lambda_{LR}$ is large. Therefore the p-value is
 
-```r
+``` r
 1 - pchisq(lrStatistic, 1)
 ```
 
@@ -579,7 +610,7 @@ $$
 \frac{\left| \hat\lambda - \lambda_0  \right|}{\hat\lambda / \sqrt n }.
 $$
 
-```r
+``` r
 waldStatistics <- abs(lambdaHat - lambda0)/(lambdaHat/sqrt(n))
 waldStatistics
 ```
@@ -589,7 +620,7 @@ waldStatistics
 ```
 This is now compared to $z_{\alpha/2}=$ 1.96 if $\alpha = 0.05$ and so we do not reject $H_0$. The p-value is:
 
-```r
+``` r
 2*(1-pnorm(waldStatistics))
 ```
 
@@ -633,7 +664,7 @@ Note that this test statistic does not require us to calculate the MLE $\hat\the
 
 We apply this to the exponential distribution. We have already calculated everything we need so it is just a matter of putting it together:
 
-```r
+``` r
 lp <- n*( 1/lambda0 - mean(t) )
 fisherInfo <- n/lambda0^2
 scoreStatistic <- lp / sqrt(fisherInfo)
@@ -645,7 +676,7 @@ scoreStatistic
 ```
 With p-value:
 
-```r
+``` r
 2*(1-pnorm(scoreStatistic))
 ```
 
@@ -695,7 +726,7 @@ $$
 $$
 in terms of $\lambda$. Looking at the figure, this has two solutions, one for $\lambda > \hat\lambda$ and one for $\lambda < \hat\lambda$. These will be the left and right endpoints of the CI.
 
-```r
+``` r
 alpha = 0.05
 scoreStatistic <- function(lambda){
   abs( n*(1/lambda - 1/lambdaHat) ) / sqrt( n/lambda^2 )
@@ -718,7 +749,7 @@ leftCILimit
 ## [1] 0.09360885
 ```
 
-```r
+``` r
 rightCILimit
 ```
 
@@ -728,7 +759,7 @@ rightCILimit
 
 We can compare this to the Wald based CI:
 
-```r
+``` r
 alpha = 0.05
 z = qnorm(1-alpha/2)
 
@@ -742,7 +773,7 @@ leftCILimit
 ## [1] 0.09360885
 ```
 
-```r
+``` r
 rightCILimit
 ```
 
@@ -785,7 +816,7 @@ l(\beta) = \sum_{i=1}^n l_i(\beta).
 $$
 Let us implement what we have so far.
 
-```r
+``` r
 s <- function(x) {
   exp(x) / (exp(x) + 1)
 }
@@ -805,7 +836,7 @@ $$
 $$
 or we calculate and solve $l'(\beta)=0$. For practice we do both ways here.
 
-```r
+``` r
 optimResult <- optimize(
   logLn,
   lower = 0.0, 
@@ -828,7 +859,7 @@ l'(\beta) &= \frac{x y s'(x \beta )}{s(x \beta )}-\frac{x (1-y) s'(x \beta )}{1-
 \end{align}
 In R:
 
-```r
+``` r
 sp <- function(x){ exp(x)/(1+exp(x))^2 }
 
 logLp <- function(beta, data){
@@ -855,6 +886,13 @@ rootResults$root
 Both methods giving the same result.
 
 To confirm that we indeed found the MLE we plot the log-likelihood.
+
+```
+## Warning in geom_point(aes(x = betahat, y = logLn(betahat, data.df)), colour = palette.colors(2), : All aesthetics have length 1, but the data has 2 rows.
+## ℹ Please consider using `annotate()` or provide this layer with data containing
+##   a single row.
+```
+
 <div class="figure" style="text-align: center">
 <img src="01-likelihood_files/figure-html/BinReglog-likelihood-1.png" alt="Log likelihood of the sample" width="80%" />
 <p class="caption">(\#fig:BinReglog-likelihood)Log likelihood of the sample</p>
@@ -867,7 +905,7 @@ To confirm that we indeed found the MLE we plot the log-likelihood.
 
 Now we turn to hypothesis testing. Let us say we want to test $H_0: \beta = 2$ against $H_1:\beta \neq 2$. First we do the asymptotic likelihood ratio test. So we need to calculate $\lambda_{\text{LR}}$:
 
-```r
+``` r
 lr <- function(beta0, data){
   2*(logLn(betahat, data) - logLn(beta0, data))
 }
@@ -879,7 +917,7 @@ lr(2.0, data.df)
 ```
 If $H_0$ is true, this is an observation of a $\chi_1^2$-distributed random variable. Therefore the p-value is
 
-```r
+``` r
 1 - pchisq(lr(2.0, data.df), 1)
 ```
 
@@ -889,7 +927,7 @@ If $H_0$ is true, this is an observation of a $\chi_1^2$-distributed random vari
 
 Next we do a Wald's test. For this we need an estimate of the standard deviation of the MLE. Perhaps the easiest way is to calculate the Fisher information, that is $-l''(\beta)$. Here there are again two options, we can do it numerically or exactly. First we calculate it numerically:
 
-```r
+``` r
 observedFisherInfo <- function(beta, data){
   drop(-pracma::hessian(logLn, beta, data = data))
 }
@@ -897,7 +935,7 @@ observedFisherInfo(betahat, data.df)
 ```
 
 ```
-## [1] 72.64594
+## [1] 72.6459
 ```
 Calculating the second derivative exactly involves more work but is preferable whenever possible. We get,
 $$
@@ -905,7 +943,7 @@ l''(\beta)=(1-y) \left(-\frac{x^2 s '(x \beta )^2}{(1-s (x \beta )^2}-\frac{x^2 
 $$
 Implemented in R:
 
-```r
+``` r
 spp <- function(x){ -exp(x)*(exp(x)-1)/(exp(x)+1)^3 }
 
 logLpp <- function(beta, data){
@@ -931,7 +969,7 @@ observedFisherInfo(betahat, data.df)
 ```
 Recall that Wald's test statistic is standard normal under $H_0$. So we may calculate the p-value:
 
-```r
+``` r
 zWald <- function(beta0, data){
   abs(betahat- beta0)*sqrt(observedFisherInfo(betahat, data))
   }
@@ -944,7 +982,7 @@ zWald <- function(beta0, data){
 
 We might also do a Score test. Here, all we need is $l'$ and $l''$, which we have already calculated. The score statistic is again standard normal under $H_0$.
 
-```r
+``` r
 zScore <- function(beta0, data){
   abs(pracma::grad(logLn, beta0, data = data) / sqrt(observedFisherInfo(beta0, data)))
 }
@@ -957,7 +995,7 @@ zScore <- function(beta0, data){
 
 Lastly, we might calculate a CI on $\beta$. Using the Wald's statistic, this would be:
 
-```r
+``` r
 alpha <- 0.05
 leftCILimit <- betahat - qnorm(1-alpha/2) / sqrt(observedFisherInfo(betahat, data.df))
 rightCILimit <- betahat + qnorm(1-alpha/2) / sqrt(observedFisherInfo(betahat, data.df))
@@ -969,7 +1007,7 @@ leftCILimit
 ## [1] 1.561624
 ```
 
-```r
+``` r
 rightCILimit
 ```
 
@@ -984,7 +1022,7 @@ For a score based CI we first plot the score statistic.
 </div>
 We need to find the points where the score statistic is $z_{\alpha/2}$, which are the limits of the CI.
 
-```r
+``` r
 alpha = 0.05
 
 f <- function(beta, data){
@@ -1004,7 +1042,7 @@ leftCILimit
 ## [1] 1.561916
 ```
 
-```r
+``` r
 rightCILimit
 ```
 
@@ -1081,7 +1119,7 @@ which can be used for constructing the Wald test.
 What this then means is that, if $n$ is large, and we where to estimate $p$ with $\hat p$ for many different samples, the distribution of the estimates would be approximately distributed as $\mathsf N(0,1)$. Let us verify this with a simulation.
 
 
-```r
+``` r
 set.seed(42)
 
 n <- 100

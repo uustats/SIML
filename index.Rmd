@@ -1,6 +1,6 @@
 --- 
 title: "Lecture notes for Statistical Inference and Machine Learning"
-author: "Patrik Andersson"
+author: "Patrik Andersson, with revisions by Hannes Waldetoft"
 date: "`r Sys.Date()`"
 site: bookdown::bookdown_site
 output: 
@@ -30,7 +30,7 @@ packages <- c("latex2exp",
 "ISLR",
 "ISLR2",
 "mlbench",
-"doMC")
+"doParallel")
 
 package.check <- lapply(
   packages,

@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>2.3 Multiparameter problems | Lecture notes for Statistical Inference and Machine Learning</title>
   <meta name="description" content="These are the lecture notes for the course Statistical Inference and Machine Learning at the Department of statistics, Uppsala University." />
-  <meta name="generator" content="bookdown 0.35 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.48 and GitBook 2.6.7" />
 
   <meta property="og:title" content="2.3 Multiparameter problems | Lecture notes for Statistical Inference and Machine Learning" />
   <meta property="og:type" content="book" />
@@ -20,10 +20,10 @@
   <meta name="twitter:description" content="These are the lecture notes for the course Statistical Inference and Machine Learning at the Department of statistics, Uppsala University." />
   
 
-<meta name="author" content="Patrik Andersson" />
+<meta name="author" content="Patrik Andersson, with revisions by Hannes Waldetoft" />
 
 
-<meta name="date" content="2023-08-24" />
+<meta name="date" content="2026-09-21" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -55,6 +55,7 @@
 
 
 <style type="text/css">
+html { -webkit-text-size-adjust: 100%; }
 pre > code.sourceCode { white-space: pre; position: relative; }
 pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
@@ -254,32 +255,32 @@ The parameter that we are interested in is <span class="math inline">\(\tau:=\th
 p(\theta_1,\theta_2\mid x) \propto L(\theta_1,\theta_2) \propto \theta_1^{x_1}(1-\theta_1)^{n_1-x_1}\theta_2^{x_2}(1-\theta_2)^{n_2-x_2}.
 \]</span>
 Note that <span class="math inline">\(\theta_1\mid x_1\sim \mathsf{Beta}(x_1+1,n_1-x_1+1)\)</span> is independent of <span class="math inline">\(\theta_2\mid x_2\sim \mathsf{Beta}(x_2+1,n_2-x_2+1).\)</span> Therefore we can simulate from <span class="math inline">\(\tau\mid x\)</span> by drawing <span class="math inline">\(\theta_1^\star\)</span> and <span class="math inline">\(\theta_2^\star\)</span> from the respective distribution and setting <span class="math inline">\(\tau^\star = \theta_2^\star - \theta_1^\star\)</span>.</p>
-<div class="sourceCode" id="cb61"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb61-1"><a href="2.3-multiparameter-problems.html#cb61-1" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
-<span id="cb61-2"><a href="2.3-multiparameter-problems.html#cb61-2" tabindex="-1"></a><span class="fu">library</span>(latex2exp)</span>
-<span id="cb61-3"><a href="2.3-multiparameter-problems.html#cb61-3" tabindex="-1"></a></span>
-<span id="cb61-4"><a href="2.3-multiparameter-problems.html#cb61-4" tabindex="-1"></a>n1 <span class="ot">&lt;-</span> <span class="dv">10</span></span>
-<span id="cb61-5"><a href="2.3-multiparameter-problems.html#cb61-5" tabindex="-1"></a>n2 <span class="ot">&lt;-</span> <span class="dv">10</span></span>
-<span id="cb61-6"><a href="2.3-multiparameter-problems.html#cb61-6" tabindex="-1"></a>theta1 <span class="ot">&lt;-</span> <span class="fl">0.5</span></span>
-<span id="cb61-7"><a href="2.3-multiparameter-problems.html#cb61-7" tabindex="-1"></a>theta2 <span class="ot">&lt;-</span> <span class="fl">0.3</span></span>
-<span id="cb61-8"><a href="2.3-multiparameter-problems.html#cb61-8" tabindex="-1"></a>nPost <span class="ot">&lt;-</span> <span class="dv">2000</span></span>
-<span id="cb61-9"><a href="2.3-multiparameter-problems.html#cb61-9" tabindex="-1"></a></span>
-<span id="cb61-10"><a href="2.3-multiparameter-problems.html#cb61-10" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">42</span>)</span>
-<span id="cb61-11"><a href="2.3-multiparameter-problems.html#cb61-11" tabindex="-1"></a></span>
-<span id="cb61-12"><a href="2.3-multiparameter-problems.html#cb61-12" tabindex="-1"></a><span class="co">#Generate data</span></span>
-<span id="cb61-13"><a href="2.3-multiparameter-problems.html#cb61-13" tabindex="-1"></a>x1 <span class="ot">&lt;-</span> <span class="fu">rbinom</span>(<span class="at">n =</span> <span class="dv">1</span>, <span class="at">size =</span> n1, <span class="at">prob =</span> theta1)</span>
-<span id="cb61-14"><a href="2.3-multiparameter-problems.html#cb61-14" tabindex="-1"></a>x2 <span class="ot">&lt;-</span> <span class="fu">rbinom</span>(<span class="at">n =</span> <span class="dv">1</span>, <span class="at">size =</span> n2, <span class="at">prob =</span> theta2)</span>
-<span id="cb61-15"><a href="2.3-multiparameter-problems.html#cb61-15" tabindex="-1"></a></span>
-<span id="cb61-16"><a href="2.3-multiparameter-problems.html#cb61-16" tabindex="-1"></a><span class="co">#Posterior for theta</span></span>
-<span id="cb61-17"><a href="2.3-multiparameter-problems.html#cb61-17" tabindex="-1"></a>theta1.post <span class="ot">&lt;-</span> <span class="fu">rbeta</span>(<span class="at">n =</span> nPost, <span class="at">shape1 =</span> x1<span class="sc">+</span><span class="dv">1</span>, <span class="at">shape2 =</span> n1<span class="sc">-</span>x1<span class="sc">+</span><span class="dv">1</span>)</span>
-<span id="cb61-18"><a href="2.3-multiparameter-problems.html#cb61-18" tabindex="-1"></a>theta2.post <span class="ot">&lt;-</span> <span class="fu">rbeta</span>(<span class="at">n =</span> nPost, <span class="at">shape1 =</span> x2<span class="sc">+</span><span class="dv">1</span>, <span class="at">shape2 =</span> n2<span class="sc">-</span>x2<span class="sc">+</span><span class="dv">1</span>)</span>
-<span id="cb61-19"><a href="2.3-multiparameter-problems.html#cb61-19" tabindex="-1"></a></span>
-<span id="cb61-20"><a href="2.3-multiparameter-problems.html#cb61-20" tabindex="-1"></a>tau.post <span class="ot">&lt;-</span> theta2.post <span class="sc">-</span> theta1.post</span>
-<span id="cb61-21"><a href="2.3-multiparameter-problems.html#cb61-21" tabindex="-1"></a></span>
-<span id="cb61-22"><a href="2.3-multiparameter-problems.html#cb61-22" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="fu">data.frame</span>(tau.post), <span class="fu">aes</span>(<span class="at">x=</span>tau.post)) <span class="sc">+</span> </span>
-<span id="cb61-23"><a href="2.3-multiparameter-problems.html#cb61-23" tabindex="-1"></a> <span class="fu">geom_histogram</span>(<span class="fu">aes</span>(<span class="at">y=</span>..density..), <span class="at">colour=</span><span class="st">&quot;black&quot;</span>, <span class="at">fill=</span><span class="st">&quot;white&quot;</span>)<span class="sc">+</span></span>
-<span id="cb61-24"><a href="2.3-multiparameter-problems.html#cb61-24" tabindex="-1"></a> <span class="fu">geom_density</span>(<span class="at">alpha=</span>.<span class="dv">2</span>, <span class="at">fill=</span><span class="st">&quot;black&quot;</span>) <span class="sc">+</span></span>
-<span id="cb61-25"><a href="2.3-multiparameter-problems.html#cb61-25" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
-<span id="cb61-26"><a href="2.3-multiparameter-problems.html#cb61-26" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="fu">TeX</span>(<span class="st">&quot;$</span><span class="sc">\\</span><span class="st">tau$&quot;</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb70"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb70-1"><a href="2.3-multiparameter-problems.html#cb70-1" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb70-2"><a href="2.3-multiparameter-problems.html#cb70-2" tabindex="-1"></a><span class="fu">library</span>(latex2exp)</span>
+<span id="cb70-3"><a href="2.3-multiparameter-problems.html#cb70-3" tabindex="-1"></a></span>
+<span id="cb70-4"><a href="2.3-multiparameter-problems.html#cb70-4" tabindex="-1"></a>n1 <span class="ot">&lt;-</span> <span class="dv">10</span></span>
+<span id="cb70-5"><a href="2.3-multiparameter-problems.html#cb70-5" tabindex="-1"></a>n2 <span class="ot">&lt;-</span> <span class="dv">10</span></span>
+<span id="cb70-6"><a href="2.3-multiparameter-problems.html#cb70-6" tabindex="-1"></a>theta1 <span class="ot">&lt;-</span> <span class="fl">0.5</span></span>
+<span id="cb70-7"><a href="2.3-multiparameter-problems.html#cb70-7" tabindex="-1"></a>theta2 <span class="ot">&lt;-</span> <span class="fl">0.3</span></span>
+<span id="cb70-8"><a href="2.3-multiparameter-problems.html#cb70-8" tabindex="-1"></a>nPost <span class="ot">&lt;-</span> <span class="dv">2000</span></span>
+<span id="cb70-9"><a href="2.3-multiparameter-problems.html#cb70-9" tabindex="-1"></a></span>
+<span id="cb70-10"><a href="2.3-multiparameter-problems.html#cb70-10" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">42</span>)</span>
+<span id="cb70-11"><a href="2.3-multiparameter-problems.html#cb70-11" tabindex="-1"></a></span>
+<span id="cb70-12"><a href="2.3-multiparameter-problems.html#cb70-12" tabindex="-1"></a><span class="co">#Generate data</span></span>
+<span id="cb70-13"><a href="2.3-multiparameter-problems.html#cb70-13" tabindex="-1"></a>x1 <span class="ot">&lt;-</span> <span class="fu">rbinom</span>(<span class="at">n =</span> <span class="dv">1</span>, <span class="at">size =</span> n1, <span class="at">prob =</span> theta1)</span>
+<span id="cb70-14"><a href="2.3-multiparameter-problems.html#cb70-14" tabindex="-1"></a>x2 <span class="ot">&lt;-</span> <span class="fu">rbinom</span>(<span class="at">n =</span> <span class="dv">1</span>, <span class="at">size =</span> n2, <span class="at">prob =</span> theta2)</span>
+<span id="cb70-15"><a href="2.3-multiparameter-problems.html#cb70-15" tabindex="-1"></a></span>
+<span id="cb70-16"><a href="2.3-multiparameter-problems.html#cb70-16" tabindex="-1"></a><span class="co">#Posterior for theta</span></span>
+<span id="cb70-17"><a href="2.3-multiparameter-problems.html#cb70-17" tabindex="-1"></a>theta1.post <span class="ot">&lt;-</span> <span class="fu">rbeta</span>(<span class="at">n =</span> nPost, <span class="at">shape1 =</span> x1<span class="sc">+</span><span class="dv">1</span>, <span class="at">shape2 =</span> n1<span class="sc">-</span>x1<span class="sc">+</span><span class="dv">1</span>)</span>
+<span id="cb70-18"><a href="2.3-multiparameter-problems.html#cb70-18" tabindex="-1"></a>theta2.post <span class="ot">&lt;-</span> <span class="fu">rbeta</span>(<span class="at">n =</span> nPost, <span class="at">shape1 =</span> x2<span class="sc">+</span><span class="dv">1</span>, <span class="at">shape2 =</span> n2<span class="sc">-</span>x2<span class="sc">+</span><span class="dv">1</span>)</span>
+<span id="cb70-19"><a href="2.3-multiparameter-problems.html#cb70-19" tabindex="-1"></a></span>
+<span id="cb70-20"><a href="2.3-multiparameter-problems.html#cb70-20" tabindex="-1"></a>tau.post <span class="ot">&lt;-</span> theta2.post <span class="sc">-</span> theta1.post</span>
+<span id="cb70-21"><a href="2.3-multiparameter-problems.html#cb70-21" tabindex="-1"></a></span>
+<span id="cb70-22"><a href="2.3-multiparameter-problems.html#cb70-22" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="fu">data.frame</span>(tau.post), <span class="fu">aes</span>(<span class="at">x=</span>tau.post)) <span class="sc">+</span> </span>
+<span id="cb70-23"><a href="2.3-multiparameter-problems.html#cb70-23" tabindex="-1"></a> <span class="fu">geom_histogram</span>(<span class="fu">aes</span>(<span class="at">y=</span>..density..), <span class="at">colour=</span><span class="st">&quot;black&quot;</span>, <span class="at">fill=</span><span class="st">&quot;white&quot;</span>)<span class="sc">+</span></span>
+<span id="cb70-24"><a href="2.3-multiparameter-problems.html#cb70-24" tabindex="-1"></a> <span class="fu">geom_density</span>(<span class="at">alpha=</span>.<span class="dv">2</span>, <span class="at">fill=</span><span class="st">&quot;black&quot;</span>) <span class="sc">+</span></span>
+<span id="cb70-25"><a href="2.3-multiparameter-problems.html#cb70-25" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb70-26"><a href="2.3-multiparameter-problems.html#cb70-26" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="fu">TeX</span>(<span class="st">&quot;$</span><span class="sc">\\</span><span class="st">tau$&quot;</span>))</span></code></pre></div>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:multiParameterExample"></span>
 <img src="02-bayesian_files/figure-html/multiParameterExample-1.png" alt="Posterior distribution" width="80%" />
 <p class="caption">
@@ -307,42 +308,42 @@ Figure 2.3: Posterior distribution
 <script>
 gitbook.require(["gitbook"], function(gitbook) {
 gitbook.start({
-"sharing": {
-"github": false,
-"facebook": true,
-"twitter": true,
-"linkedin": false,
-"weibo": false,
-"instapaper": false,
-"vk": false,
-"whatsapp": false,
-"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
-},
-"fontsettings": {
-"theme": "white",
-"family": "sans",
-"size": 2
-},
-"edit": {
-"link": null,
-"text": null
-},
-"history": {
-"link": null,
-"text": null
-},
-"view": {
-"link": null,
-"text": null
-},
-"download": null,
-"search": {
-"engine": "fuse",
-"options": null
-},
-"toc": {
-"collapse": "subsection"
-}
+  "sharing": {
+    "github": false,
+    "facebook": true,
+    "twitter": true,
+    "linkedin": false,
+    "weibo": false,
+    "instapaper": false,
+    "vk": false,
+    "whatsapp": false,
+    "all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+  },
+  "fontsettings": {
+    "theme": "white",
+    "family": "sans",
+    "size": 2
+  },
+  "edit": {
+    "link": null,
+    "text": null
+  },
+  "history": {
+    "link": null,
+    "text": null
+  },
+  "view": {
+    "link": null,
+    "text": null
+  },
+  "download": null,
+  "search": {
+    "engine": "fuse",
+    "options": null
+  },
+  "toc": {
+    "collapse": "subsection"
+  }
 });
 });
 </script>

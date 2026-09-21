@@ -1007,7 +1007,7 @@ library(latex2exp)
 alpha = 0.05
 
 f <- function(beta){
-  zScore(beta) - qnorm(1-alpha/2)
+  zScore(beta, data.df) - qnorm(1-alpha/2)
 }
 
 rootResults <- uniroot(f, interval = c(betahat-1,betahat))
@@ -1017,7 +1017,7 @@ rootResults <- uniroot(f, interval = c(betahat+1,betahat))
 rightCILimit <- rootResults$root
 
 ggplot(data.frame(x = c(1, 3)), aes(x = x)) +
-  stat_function(fun = Vectorize(zScore, "beta0"), linewidth = 1) +
+  stat_function(fun = Vectorize(zScore, "beta0"), args = list(data = data.df), linewidth = 1) +
   geom_rect(aes(xmin=leftCILimit, xmax=rightCILimit, ymin=0, ymax=Inf), fill = palette.colors(2)[2], alpha = 0.2) +
   theme_minimal() +
   ylab('Score statistic') +

@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>1.11 Confidence intervals | Lecture notes for Statistical Inference and Machine Learning</title>
   <meta name="description" content="These are the lecture notes for the course Statistical Inference and Machine Learning at the Department of statistics, Uppsala University." />
-  <meta name="generator" content="bookdown 0.35 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.48 and GitBook 2.6.7" />
 
   <meta property="og:title" content="1.11 Confidence intervals | Lecture notes for Statistical Inference and Machine Learning" />
   <meta property="og:type" content="book" />
@@ -20,10 +20,10 @@
   <meta name="twitter:description" content="These are the lecture notes for the course Statistical Inference and Machine Learning at the Department of statistics, Uppsala University." />
   
 
-<meta name="author" content="Patrik Andersson" />
+<meta name="author" content="Patrik Andersson, with revisions by Hannes Waldetoft" />
 
 
-<meta name="date" content="2023-08-24" />
+<meta name="date" content="2026-09-21" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -55,6 +55,7 @@
 
 
 <style type="text/css">
+html { -webkit-text-size-adjust: 100%; }
 pre > code.sourceCode { white-space: pre; position: relative; }
 pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
@@ -122,6 +123,28 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <style type="text/css">
   
   div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
+<style type="text/css">
+/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
 </style>
 
 <link rel="stylesheet" href="style.css" type="text/css" />
@@ -264,35 +287,35 @@ Figure 1.7: Score statistic and confidence intervall
 \frac{\left| l&#39;_n(\lambda)\right |}{\sqrt{I_n(\lambda)}} = z_{\alpha/2},
 \]</span>
 in terms of <span class="math inline">\(\lambda\)</span>. Looking at the figure, this has two solutions, one for <span class="math inline">\(\lambda &gt; \hat\lambda\)</span> and one for <span class="math inline">\(\lambda &lt; \hat\lambda\)</span>. These will be the left and right endpoints of the CI.</p>
-<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="1.11-confidence-intervals.html#cb27-1" tabindex="-1"></a>alpha <span class="ot">=</span> <span class="fl">0.05</span></span>
-<span id="cb27-2"><a href="1.11-confidence-intervals.html#cb27-2" tabindex="-1"></a>scoreStatistic <span class="ot">&lt;-</span> <span class="cf">function</span>(lambda){</span>
-<span id="cb27-3"><a href="1.11-confidence-intervals.html#cb27-3" tabindex="-1"></a>  <span class="fu">abs</span>( n<span class="sc">*</span>(<span class="dv">1</span><span class="sc">/</span>lambda <span class="sc">-</span> <span class="dv">1</span><span class="sc">/</span>lambdaHat) ) <span class="sc">/</span> <span class="fu">sqrt</span>( n<span class="sc">/</span>lambda<span class="sc">^</span><span class="dv">2</span> )</span>
-<span id="cb27-4"><a href="1.11-confidence-intervals.html#cb27-4" tabindex="-1"></a>}</span>
-<span id="cb27-5"><a href="1.11-confidence-intervals.html#cb27-5" tabindex="-1"></a></span>
-<span id="cb27-6"><a href="1.11-confidence-intervals.html#cb27-6" tabindex="-1"></a>f <span class="ot">&lt;-</span> <span class="cf">function</span>(lambda){</span>
-<span id="cb27-7"><a href="1.11-confidence-intervals.html#cb27-7" tabindex="-1"></a>  <span class="fu">scoreStatistic</span>(lambda) <span class="sc">-</span> <span class="fu">qnorm</span>(<span class="dv">1</span><span class="sc">-</span>alpha<span class="sc">/</span><span class="dv">2</span>)</span>
-<span id="cb27-8"><a href="1.11-confidence-intervals.html#cb27-8" tabindex="-1"></a>}</span>
-<span id="cb27-9"><a href="1.11-confidence-intervals.html#cb27-9" tabindex="-1"></a></span>
-<span id="cb27-10"><a href="1.11-confidence-intervals.html#cb27-10" tabindex="-1"></a>rootResults <span class="ot">&lt;-</span> <span class="fu">uniroot</span>(f, <span class="at">interval =</span> <span class="fu">c</span>(lambdaHat<span class="fl">-0.05</span>,lambdaHat))</span>
-<span id="cb27-11"><a href="1.11-confidence-intervals.html#cb27-11" tabindex="-1"></a>leftCILimit <span class="ot">&lt;-</span> rootResults<span class="sc">$</span>root</span>
-<span id="cb27-12"><a href="1.11-confidence-intervals.html#cb27-12" tabindex="-1"></a></span>
-<span id="cb27-13"><a href="1.11-confidence-intervals.html#cb27-13" tabindex="-1"></a>rootResults <span class="ot">&lt;-</span> <span class="fu">uniroot</span>(f, <span class="at">interval =</span> <span class="fu">c</span>(lambdaHat<span class="fl">+0.05</span>,lambdaHat))</span>
-<span id="cb27-14"><a href="1.11-confidence-intervals.html#cb27-14" tabindex="-1"></a>rightCILimit <span class="ot">&lt;-</span> rootResults<span class="sc">$</span>root</span>
-<span id="cb27-15"><a href="1.11-confidence-intervals.html#cb27-15" tabindex="-1"></a></span>
-<span id="cb27-16"><a href="1.11-confidence-intervals.html#cb27-16" tabindex="-1"></a>leftCILimit</span></code></pre></div>
+<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="1.11-confidence-intervals.html#cb32-1" tabindex="-1"></a>alpha <span class="ot">=</span> <span class="fl">0.05</span></span>
+<span id="cb32-2"><a href="1.11-confidence-intervals.html#cb32-2" tabindex="-1"></a>scoreStatistic <span class="ot">&lt;-</span> <span class="cf">function</span>(lambda){</span>
+<span id="cb32-3"><a href="1.11-confidence-intervals.html#cb32-3" tabindex="-1"></a>  <span class="fu">abs</span>( n<span class="sc">*</span>(<span class="dv">1</span><span class="sc">/</span>lambda <span class="sc">-</span> <span class="dv">1</span><span class="sc">/</span>lambdaHat) ) <span class="sc">/</span> <span class="fu">sqrt</span>( n<span class="sc">/</span>lambda<span class="sc">^</span><span class="dv">2</span> )</span>
+<span id="cb32-4"><a href="1.11-confidence-intervals.html#cb32-4" tabindex="-1"></a>}</span>
+<span id="cb32-5"><a href="1.11-confidence-intervals.html#cb32-5" tabindex="-1"></a></span>
+<span id="cb32-6"><a href="1.11-confidence-intervals.html#cb32-6" tabindex="-1"></a>f <span class="ot">&lt;-</span> <span class="cf">function</span>(lambda){</span>
+<span id="cb32-7"><a href="1.11-confidence-intervals.html#cb32-7" tabindex="-1"></a>  <span class="fu">scoreStatistic</span>(lambda) <span class="sc">-</span> <span class="fu">qnorm</span>(<span class="dv">1</span><span class="sc">-</span>alpha<span class="sc">/</span><span class="dv">2</span>)</span>
+<span id="cb32-8"><a href="1.11-confidence-intervals.html#cb32-8" tabindex="-1"></a>}</span>
+<span id="cb32-9"><a href="1.11-confidence-intervals.html#cb32-9" tabindex="-1"></a></span>
+<span id="cb32-10"><a href="1.11-confidence-intervals.html#cb32-10" tabindex="-1"></a>rootResults <span class="ot">&lt;-</span> <span class="fu">uniroot</span>(f, <span class="at">interval =</span> <span class="fu">c</span>(lambdaHat<span class="fl">-0.05</span>,lambdaHat))</span>
+<span id="cb32-11"><a href="1.11-confidence-intervals.html#cb32-11" tabindex="-1"></a>leftCILimit <span class="ot">&lt;-</span> rootResults<span class="sc">$</span>root</span>
+<span id="cb32-12"><a href="1.11-confidence-intervals.html#cb32-12" tabindex="-1"></a></span>
+<span id="cb32-13"><a href="1.11-confidence-intervals.html#cb32-13" tabindex="-1"></a>rootResults <span class="ot">&lt;-</span> <span class="fu">uniroot</span>(f, <span class="at">interval =</span> <span class="fu">c</span>(lambdaHat<span class="fl">+0.05</span>,lambdaHat))</span>
+<span id="cb32-14"><a href="1.11-confidence-intervals.html#cb32-14" tabindex="-1"></a>rightCILimit <span class="ot">&lt;-</span> rootResults<span class="sc">$</span>root</span>
+<span id="cb32-15"><a href="1.11-confidence-intervals.html#cb32-15" tabindex="-1"></a></span>
+<span id="cb32-16"><a href="1.11-confidence-intervals.html#cb32-16" tabindex="-1"></a>leftCILimit</span></code></pre></div>
 <pre><code>## [1] 0.09360885</code></pre>
-<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="1.11-confidence-intervals.html#cb29-1" tabindex="-1"></a>rightCILimit</span></code></pre></div>
+<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="1.11-confidence-intervals.html#cb34-1" tabindex="-1"></a>rightCILimit</span></code></pre></div>
 <pre><code>## [1] 0.1392479</code></pre>
 <p>We can compare this to the Wald based CI:</p>
-<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="1.11-confidence-intervals.html#cb31-1" tabindex="-1"></a>alpha <span class="ot">=</span> <span class="fl">0.05</span></span>
-<span id="cb31-2"><a href="1.11-confidence-intervals.html#cb31-2" tabindex="-1"></a>z <span class="ot">=</span> <span class="fu">qnorm</span>(<span class="dv">1</span><span class="sc">-</span>alpha<span class="sc">/</span><span class="dv">2</span>)</span>
-<span id="cb31-3"><a href="1.11-confidence-intervals.html#cb31-3" tabindex="-1"></a></span>
-<span id="cb31-4"><a href="1.11-confidence-intervals.html#cb31-4" tabindex="-1"></a>leftCILimit <span class="ot">&lt;-</span> lambdaHat <span class="sc">-</span> <span class="fu">qnorm</span>(<span class="dv">1</span><span class="sc">-</span>alpha<span class="sc">/</span><span class="dv">2</span>)<span class="sc">*</span>lambdaHat<span class="sc">/</span><span class="fu">sqrt</span>(n)</span>
-<span id="cb31-5"><a href="1.11-confidence-intervals.html#cb31-5" tabindex="-1"></a>rightCILimit <span class="ot">&lt;-</span> lambdaHat <span class="sc">+</span> <span class="fu">qnorm</span>(<span class="dv">1</span><span class="sc">-</span>alpha<span class="sc">/</span><span class="dv">2</span>)<span class="sc">*</span>lambdaHat<span class="sc">/</span><span class="fu">sqrt</span>(n)</span>
-<span id="cb31-6"><a href="1.11-confidence-intervals.html#cb31-6" tabindex="-1"></a></span>
-<span id="cb31-7"><a href="1.11-confidence-intervals.html#cb31-7" tabindex="-1"></a>leftCILimit</span></code></pre></div>
+<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="1.11-confidence-intervals.html#cb36-1" tabindex="-1"></a>alpha <span class="ot">=</span> <span class="fl">0.05</span></span>
+<span id="cb36-2"><a href="1.11-confidence-intervals.html#cb36-2" tabindex="-1"></a>z <span class="ot">=</span> <span class="fu">qnorm</span>(<span class="dv">1</span><span class="sc">-</span>alpha<span class="sc">/</span><span class="dv">2</span>)</span>
+<span id="cb36-3"><a href="1.11-confidence-intervals.html#cb36-3" tabindex="-1"></a></span>
+<span id="cb36-4"><a href="1.11-confidence-intervals.html#cb36-4" tabindex="-1"></a>leftCILimit <span class="ot">&lt;-</span> lambdaHat <span class="sc">-</span> <span class="fu">qnorm</span>(<span class="dv">1</span><span class="sc">-</span>alpha<span class="sc">/</span><span class="dv">2</span>)<span class="sc">*</span>lambdaHat<span class="sc">/</span><span class="fu">sqrt</span>(n)</span>
+<span id="cb36-5"><a href="1.11-confidence-intervals.html#cb36-5" tabindex="-1"></a>rightCILimit <span class="ot">&lt;-</span> lambdaHat <span class="sc">+</span> <span class="fu">qnorm</span>(<span class="dv">1</span><span class="sc">-</span>alpha<span class="sc">/</span><span class="dv">2</span>)<span class="sc">*</span>lambdaHat<span class="sc">/</span><span class="fu">sqrt</span>(n)</span>
+<span id="cb36-6"><a href="1.11-confidence-intervals.html#cb36-6" tabindex="-1"></a></span>
+<span id="cb36-7"><a href="1.11-confidence-intervals.html#cb36-7" tabindex="-1"></a>leftCILimit</span></code></pre></div>
 <pre><code>## [1] 0.09360885</code></pre>
-<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="1.11-confidence-intervals.html#cb33-1" tabindex="-1"></a>rightCILimit</span></code></pre></div>
+<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="1.11-confidence-intervals.html#cb38-1" tabindex="-1"></a>rightCILimit</span></code></pre></div>
 <pre><code>## [1] 0.1392479</code></pre>
 <p>Again, in this particular example, the two intervals are the same.</p>
 </div>
@@ -316,42 +339,42 @@ in terms of <span class="math inline">\(\lambda\)</span>. Looking at the figure,
 <script>
 gitbook.require(["gitbook"], function(gitbook) {
 gitbook.start({
-"sharing": {
-"github": false,
-"facebook": true,
-"twitter": true,
-"linkedin": false,
-"weibo": false,
-"instapaper": false,
-"vk": false,
-"whatsapp": false,
-"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
-},
-"fontsettings": {
-"theme": "white",
-"family": "sans",
-"size": 2
-},
-"edit": {
-"link": null,
-"text": null
-},
-"history": {
-"link": null,
-"text": null
-},
-"view": {
-"link": null,
-"text": null
-},
-"download": null,
-"search": {
-"engine": "fuse",
-"options": null
-},
-"toc": {
-"collapse": "subsection"
-}
+  "sharing": {
+    "github": false,
+    "facebook": true,
+    "twitter": true,
+    "linkedin": false,
+    "weibo": false,
+    "instapaper": false,
+    "vk": false,
+    "whatsapp": false,
+    "all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+  },
+  "fontsettings": {
+    "theme": "white",
+    "family": "sans",
+    "size": 2
+  },
+  "edit": {
+    "link": null,
+    "text": null
+  },
+  "history": {
+    "link": null,
+    "text": null
+  },
+  "view": {
+    "link": null,
+    "text": null
+  },
+  "download": null,
+  "search": {
+    "engine": "fuse",
+    "options": null
+  },
+  "toc": {
+    "collapse": "subsection"
+  }
 });
 });
 </script>

@@ -119,6 +119,23 @@ $$
 p(\theta) = \frac{\theta^{\alpha-1}(1-\theta)^{\beta-1}}{B(\alpha,\beta)},\quad 0\leq \theta\leq 1,
 $$
 <p>where $\alpha>0$ and $\beta>0$ are parameters. Also, $B(\alpha,\beta)$ is the beta function, defined simply such that the density integrates to one. We plot the density for a few choices of $\alpha$ and $\beta$.</p>
+
+```
+## Warning: package 'ggplot2' was built under R version 4.6.1
+```
+
+```
+## Warning: package 'latex2exp' was built under R version 4.6.1
+```
+
+```
+## Warning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.
+## ℹ Please use `linewidth` instead.
+## This warning is displayed once per session.
+## Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
+## generated.
+```
+
 <div class="figure" style="text-align: center">
 <img src="02-bayesian_files/figure-html/betaDist-1.png" alt="Density of the beta distribution" width="80%" />
 <p class="caption">(\#fig:betaDist)Density of the beta distribution</p>
@@ -205,7 +222,7 @@ $$
 Note that $\theta_1\mid x_1\sim \mathsf{Beta}(x_1+1,n_1-x_1+1)$ is independent of $\theta_2\mid x_2\sim \mathsf{Beta}(x_2+1,n_2-x_2+1).$ Therefore we can simulate from $\tau\mid x$ by drawing $\theta_1^\star$ and $\theta_2^\star$ from the respective distribution and setting $\tau^\star = \theta_2^\star - \theta_1^\star$.
 
 
-```r
+``` r
 library(ggplot2)
 library(latex2exp)
 
@@ -300,7 +317,7 @@ Here we know that the normalizing constant is $\lambda$, but the idea of MCMC is
 
 First we implement the density. We do it on a log-scale. This is because we need to divide two densities in the algorithm. On a log-scale this becomes subtraction, which is numerically more stable.
 
-```r
+``` r
 logDensity <- function(x) {
   lambda <- 1
   
@@ -314,7 +331,7 @@ logDensity <- function(x) {
 ```
 Next implement the random-walk Metropolis-Hastings algorithm with normally distributed steps.
 
-```r
+``` r
 mcmc.iter <- function(x, logDensity, sigma, n.iter){
   #Random walk Metropolis Hastings MCMC
   
@@ -344,7 +361,7 @@ mcmc.iter <- function(x, logDensity, sigma, n.iter){
 ```
 Now we can run the algorithm. First for 1000 step that we throw away. This is since the distribution of the samples are correct only when the number of steps are large. Then we run it for as many steps as we need samples.
 
-```r
+``` r
 x.init <- 1 #Initial value
 nIter <- 100000 #Number of MC steps
 set.seed(42)
@@ -361,7 +378,7 @@ exp.mcmc <- mcmc.iter(exp.mcmc$sample[nrow(exp.mcmc$sample),],
 ```
 We can check for example that the mean and standard deviation of the samples are as expected, i.e. in our case 1.
 
-```r
+``` r
 mean(exp.mcmc$sample)
 ```
 
@@ -369,7 +386,7 @@ mean(exp.mcmc$sample)
 ## [1] 1.072045
 ```
 
-```r
+``` r
 sd(exp.mcmc$sample)
 ```
 
@@ -378,7 +395,7 @@ sd(exp.mcmc$sample)
 ```
 We can plot the histogram of the samples against the density.
 
-<img src="02-bayesian_files/figure-html/mcmcExample-1.png" width="80%" style="display: block; margin: auto;" />
+<img src="02-bayesian_files/figure-html/mcmcExample-1.png" alt="" width="80%" style="display: block; margin: auto;" />
 
 
 ## An application
@@ -420,7 +437,7 @@ We will use a random walk Metropolis Hastings algorithm with $\varepsilon\overse
 
 Now, we implement this in R. First we load the data.
 
-```r
+``` r
 data.df <- read.csv("data/bayesProbit.dat", header=TRUE)
 n <- nrow(data.df)
 data.df$z0 <- rep(1, n)
@@ -430,7 +447,7 @@ data.df <- data.df[, col_order]
 ```
 Then implement the likelihood function and prior density. We do this on a log-scale.
 
-```r
+``` r
 logL <- function(beta){
   p <- pnorm(
     as.matrix(
@@ -451,7 +468,7 @@ logPosterior <- function(beta){ logL(beta) + logPrior(beta)}
 
 Now run the Markov chain. First a burn-in of 1000 steps, that we then discard. After that a longer run.
 
-```r
+``` r
 beta <- c(0,0,0,0) #Initial value
 nIter <- 100000 #Number of MC steps
 
@@ -469,7 +486,7 @@ beta.mcmc <- mcmc.iter(beta.mcmc$sample[nrow(beta.mcmc$sample),],
 ```
 Now we do some diagnostics of the simulation. First check that the acceptance probability is reasonable.
 
-```r
+``` r
 beta.mcmc$accProb
 ```
 
@@ -496,7 +513,7 @@ Then we plot the posterior distribution of the parameters.
 
 From this we can get point estimates, the mean of the posterior distribution, and credible intervals.
 
-```r
+``` r
 #Point estimates
 colMeans(beta.mcmc$sample)
 ```
@@ -505,7 +522,7 @@ colMeans(beta.mcmc$sample)
 ## [1] -1.1829531  0.3175842  1.1576232 -1.4132245
 ```
 
-```r
+``` r
 #95% CI
 apply(beta.mcmc$sample, 2, quantile, probs = c(0.05,0.95))
 ```
@@ -517,7 +534,7 @@ apply(beta.mcmc$sample, 2, quantile, probs = c(0.05,0.95))
 ```
 As a final check, let us verify that our estimates makes sense by comparing our data to our predictions.
 
-```r
+``` r
 beta.fit <- colMeans(beta.mcmc$sample)
 p <- pnorm(as.matrix(data.df[3:6])%*%beta.fit)
 y.pred <- data.df$n*p
@@ -578,7 +595,7 @@ $$
 </div>
 The mean of the posterior, and our point estimate of $\lambda$ is $518/246.7 \approx 2.1$ and a 95\% credibility interval is given by
 
-```r
+``` r
 lower <- qgamma(0.025, shape = 518, 20/3 + 240)
 upper <- qgamma(0.975, shape = 518, 20/3 + 240)
 c( lower, upper )
@@ -595,7 +612,7 @@ c( lower, upper )
 </div>
 Now our point estimate of $\lambda$ is $489/240 \approx 2$ and a 95\% credibility interval is given by
 
-```r
+``` r
 lower <- qgamma(0.025, shape = 489, 240)
 upper <- qgamma(0.975, shape = 489, 240)
 c( lower, upper )

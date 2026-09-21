@@ -1,7 +1,7 @@
 --- 
 title: "Lecture notes for Statistical Inference and Machine Learning"
-author: "Patrik Andersson"
-date: "2023-08-24"
+author: "Patrik Andersson, with revisions by Hannes Waldetoft"
+date: "2026-09-21"
 site: bookdown::bookdown_site
 output: 
   bookdown::gitbook:
@@ -23,4 +23,4 @@ The course litterature is Applied Statistical Inference (ASI) by Held & Bové an
 
 At the beginning of each chapter, the readings from the books that are relevant for the chapter is given.
 
-You can find the source code for these lecture notes at <a href="https://github.com/LPAndersson/SIML">GitHub</a>
+You can find the source code for these lecture notes at <a href="https://github.com/uustats/SIML">GitHub</a>
